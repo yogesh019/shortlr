@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>{% block %}Welcome to mysite {% endblock %}</title>
+        <title>{% block title %}Welcome to mysite {% endblock %}</title>
         {% load staticfiles %}
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="{% static 'shortenersite/css/custom.css' %}" />
@@ -17,17 +17,27 @@
                             'csrfmiddlewaretoken':$("input[name=csrfmiddlewaretoken]").val(),
                             }, // every post  request through ajax or python script requires a csrf token
                             success:returnSuccess,
-                            datatype:json,
+                            datatype:'json'
                             });
                         });
                     });
              function returnSuccess(data,textStatus,jqXHR){
                  if(data.url){
                      $('#url-result').text(data.url);
+                     var el=document.getElementById("url-result");
+                     var x=document.createElement("a");
+                     x["href"]=el.innerHTML;
+                     x.innerHTML=el.innerHTML;
+                     el.innerHTML="";
+                     el.appendChild(x);
                      $('#url').val("");
-                 }else{
-                     $('#url-result').text("Do not Submit blank!");
+                 }else if(data.error1){
+                     $('#url-result').text("Inavalid URL");
                  }
+                 else{
+                     $('#url-result').text("Do not submit blank");
+                 }
+
              }
         </script>
     </head>
