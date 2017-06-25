@@ -1,0 +1,51 @@
+<html>
+    <head>
+        <title>{% block %}Welcome to mysite {% endblock %}</title>
+        {% load staticfiles %}
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="{% static 'shortenersite/css/custom.css' %}" />
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script type="text/javascript">
+            $(function(){
+                    $('#submitButton').click(function(){
+                        $.ajax({
+                            type:"POST",
+                            url:"/makeshort/",
+                            data:{
+                            'url':$('#url').val(),
+                            'csrfmiddlewaretoken':$("input[name=csrfmiddlewaretoken]").val(),
+                            }, // every post  request through ajax or python script requires a csrf token
+                            success:returnSuccess,
+                            datatype:json,
+                            });
+                        });
+                    });
+             function returnSuccess(data,textStatus,jqXHR){
+                 if(data.url){
+                     $('#url-result').text(data.url);
+                     $('#url').val("");
+                 }else{
+                     $('#url-result').text("Do not Submit blank!");
+                 }
+             }
+        </script>
+    </head>
+    <body>
+        <div id="wrap">
+            <header>
+                <h1><a href="{% url 'shortenersite:home' %}">URL Shortener</a><small>Shorten the URL</small></h1>
+            </header>
+            <div id="content">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </body>
+</html>
+
+
+
+
+ 
+
